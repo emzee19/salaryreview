@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phishing Simulation — Control Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07090F;
+    --surface: #0E1420;
+    --surface2: #141B2D;
+    --accent: #6366F1;
+    --accent-dim: rgba(99,102,241,0.12);
+    --accent-border: rgba(99,102,241,0.3);
+    --green: #10B981;
+    --green-dim: rgba(16,185,129,0.1);
+    --amber: #F59E0B;
+    --amber-dim: rgba(245,158,11,0.1);
+    --red: #EF4444;
+    --red-dim: rgba(239,68,68,0.1);
+    --text: #E2E8F0;
+    --muted: #64748B;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 700px 500px at 50% 0%, rgba(99,102,241,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Header */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .header-icon {
+    width: 38px;
+    height: 38px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .header-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .header-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--green);
+    letter-spacing: 0.5px;
+  }
+
+  .live-badge::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Main content */
+  .main {
+    padding: 48px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .page-heading {
+    margin-bottom: 40px;
+  }
+
+  .page-heading h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .page-heading p {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.7;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1;
+  }
+
+  .stat-value.green { color: var(--green); }
+  .stat-value.amber { color: var(--amber); }
+  .stat-value.red { color: var(--red); }
+
+  .stat-note {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* Section label */
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Simulation cards */
+  .sim-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+    margin-bottom: 40px;
+  }
+
+  .sim-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sim-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .sim-card.toc::before { background: linear-gradient(90deg, #B8972A, transparent); }
+  .sim-card.fsi::before { background: linear-gradient(90deg, var(--accent), transparent); }
+  .sim-card.awareness::before { background: linear-gradient(90deg, var(--green), transparent); }
+
+  .sim-card:hover {
+    border-color: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+  }
+
+  .sim-card:hover::before { opacity: 1; }
+
+  .sim-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .sim-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+
+  .sim-icon.toc { background: rgba(184,151,42,0.12); border: 1px solid rgba(184,151,42,0.3); }
+  .sim-icon.fsi { background: var(--accent-dim); border: 1px solid var(--accent-border); }
+  .sim-icon.awareness { background: var(--green-dim); border: 1px solid rgba(16,185,129,0.3); }
+
+  .sim-status {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+
+  .status-live {
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
+    color: var(--green);
+  }
+
+  .status-ready {
+    background: rgba(99,102,241,0.1);
+    border: 1px solid rgba(99,102,241,0.3);
+    color: #818CF8;
+  }
+
+  .sim-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .sim-desc {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+
+  .sim-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .meta-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+
+  .meta-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .sim-arrow {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 16px;
+    transition: transform 0.2s, color 0.2s;
+  }
+
+  .sim-card:hover .sim-arrow {
+    transform: translateX(4px);
+    color: #fff;
+  }
+
+  /* Flow diagram */
+  .flow-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+  }
+
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    padding: 8px 0;
+  }
+
+  .flow-node {
+    flex-shrink: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-align: center;
+    min-width: 140px;
+  }
+
+  .flow-node .fn-icon { font-size: 20px; margin-bottom: 6px; }
+  .flow-node .fn-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+  .flow-node .fn-sub {
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .flow-arrow {
+    flex-shrink: 0;
+    color: var(--muted);
+    font-size: 18px;
+    padding: 0 12px;
+  }
+
+  @media (max-width: 768px) {
+    .header { padding: 16px 20px; }
+    .main { padding: 32px 20px; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .page-heading h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-icon">🛡️</div>
+    <div>
+      <div class="header-title">PhishSim Control Panel</div>
+      <div class="header-sub">Security Awareness Programme &nbsp;·&nbsp; Admin View</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-badge">Active Exercise</div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <div class="page-heading">
+    <h1>Simulation Dashboard</h1>
+    <p>Manage and preview all active phishing simulation scenarios. Click any card to preview the page as a target would see it.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Scenarios Deployed</div>
+      <div class="stat-value accent" style="color:#818CF8;">2</div>
+      <div class="stat-note">TOC · FSI active</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Awareness Page</div>
+      <div class="stat-value green">Ready</div>
+      <div class="stat-note">Auto-redirect on submit</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Presentation</div>
+      <div class="stat-value amber">Tomorrow</div>
+      <div class="stat-note">Final review in progress</div>
+    </div>
+  </div>
+
+  <!-- Simulation pages -->
+  <div class="section-label">Simulation Scenarios</div>
+  <div class="sim-grid">
+
+    <!-- TOC -->
+    <a class="sim-card toc" href="toc.html" target="_blank">
+      <div class="sim-card-top">
+        <div class="sim-icon toc">🏛️</div>
+        <div class="sim-status status-live">Live</div>
+      </div>
+      <div class="sim-name">Tunde Ogunsakin &amp; Co.</div>
+      <div class="sim-desc">Fake HR Salary Review portal. Targets submit credentials which are captured and displayed on the awareness page.</div>
+      <div class="sim-meta">
+        <div class="meta-item">
+          <div class="meta-key">File</div>
+          <div class="meta-val">toc.html</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-key">Type</div>
+          <div class="meta-val">HR Phish</div>
+        </div>
+        <div class="sim-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- FSI -->
+    <a class="sim-card fsi" href="fsi.html" target="_blank">
+      <div class="sim-card-top">
+        <div class="sim-icon fsi">🏦</div>
+        <div class="sim-status status-live">Live</div>
+      </div>
+      <div class="sim-name">FSI Scenario</div>
+      <div class="sim-desc">Financial services institution phishing page. Simulates a banking or financial portal credential harvest.</div>
+      <div class="sim-meta">
+        <div class="meta-item">
+          <div class="meta-key">File</div>
+          <div class="meta-val">fsi.html</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-key">Type</div>
+          <div class="meta-val">FinServ Phish</div>
+        </div>
+        <div class="sim-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Awareness -->
+    <a class="sim-card awareness" href="awareness.html" target="_blank">
+      <div class="sim-card-top">
+        <div class="sim-icon awareness">✅</div>
+        <div class="sim-status status-ready">Reveal Page</div>
+      </div>
+      <div class="sim-name">Security Awareness Reveal</div>
+      <div class="sim-desc">Shown after a target clicks a sim link or submits credentials. Displays what they entered and teaches red flags.</div>
+      <div class="sim-meta">
+        <div class="meta-item">
+          <div class="meta-key">File</div>
+          <div class="meta-val">awareness.html</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-key">Type</div>
+          <div class="meta-val">Education</div>
+        </div>
+        <div class="sim-arrow">→</div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Flow -->
+  <div class="section-label">Attack Flow</div>
+  <div class="flow-section">
+    <div class="flow-row">
+      <div class="flow-node">
+        <div class="fn-icon">📧</div>
+        <div class="fn-label">Phishing Email</div>
+        <div class="fn-sub">Sent to target</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="fn-icon">🖱️</div>
+        <div class="fn-label">Target Clicks</div>
+        <div class="fn-sub">toc.html / fsi.html</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="fn-icon">🔑</div>
+        <div class="fn-label">Credentials Entered</div>
+        <div class="fn-sub">Form submitted via GET</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="fn-icon">🎣</div>
+        <div class="fn-label">Awareness Page</div>
+        <div class="fn-sub">awareness.html?email=&password=</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="fn-icon">🧠</div>
+        <div class="fn-label">Learning Moment</div>
+        <div class="fn-sub">Red flags explained</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

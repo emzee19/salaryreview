@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Portal — Tunde Ogunsakin & Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:       #0B1524;
+    --navy-mid:   #112236;
+    --navy-light: #1A3350;
+    --orange:     #E8720C;
+    --orange-dim: rgba(232,114,12,0.12);
+    --orange-bdr: rgba(232,114,12,0.3);
+    --gold:       #F5A623;
+    --white:      #FFFFFF;
+    --text:       #E2DDD5;
+    --muted:      #7A8EA0;
+    --border:     rgba(255,255,255,0.08);
+    --border-lit: rgba(255,255,255,0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ═══════════════════════════════
+     TOP UTILITY BAR
+  ═══════════════════════════════ */
+  .topbar {
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+    padding: 9px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .topbar-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .topbar-links a {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    transition: color 0.15s;
+  }
+
+  .topbar-links a:hover { color: var(--text); }
+  .topbar-links a.active { color: var(--orange); }
+
+  .topbar-right .login-chip {
+    padding: 5px 14px;
+    background: var(--orange-dim);
+    border: 1px solid var(--orange-bdr);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--orange);
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .topbar-right .login-chip:hover { background: rgba(232,114,12,0.22); }
+
+  /* ═══════════════════════════════
+     NAVBAR
+  ═══════════════════════════════ */
+  .navbar {
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 76px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /*
+  ╔══════════════════════════════════════════════════╗
+  ║  LOGO PLACEHOLDER — TUNDE OGUNSAKIN & CO.       ║
+  ║  HOW TO INSERT YOUR REAL LOGO:                  ║
+  ║  1. Save your logo image in the same folder     ║
+  ║     as this HTML file.                          ║
+  ║  2. Find the <img id="tocLogo" ...> tag below.  ║
+  ║  3. Change  src=""  to  src="your-logo.png"     ║
+  ║     (or .jpg / .svg — any format works)         ║
+  ║  The dashed placeholder will disappear          ║
+  ║  automatically once a valid src is set.         ║
+  ╚══════════════════════════════════════════════════╝
+  */
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    cursor: default;
+  }
+
+  .logo-img-box {
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-img-box img.logo-img {
+    height: 48px;
+    width: auto;
+    display: none; /* hidden until src loads */
+    object-fit: contain;
+  }
+
+  .logo-placeholder-box {
+    height: 48px;
+    width: 130px;
+    border: 1.5px dashed rgba(232,114,12,0.45);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: var(--orange-dim);
+  }
+
+  .logo-placeholder-box .ph-icon { font-size: 16px; opacity: 0.5; }
+
+  .logo-placeholder-box .ph-label {
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--orange);
+  }
+
+  .logo-placeholder-box .ph-sub {
+    font-size: 7.5px;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+  }
+
+  .firm-name-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .firm-name-text .line1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .firm-name-text .line2 {
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--orange);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .nav-links a {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    transition: color 0.15s;
+    padding: 28px 0;
+    border-bottom: 2px solid transparent;
+  }
+
+  .nav-links a:hover {
+    color: var(--white);
+    border-bottom-color: var(--orange);
+  }
+
+  /* ═══════════════════════════════
+     HERO STRIP
+  ═══════════════════════════════ */
+  .hero-strip {
+    background: linear-gradient(110deg, #0D1E35 0%, #0B1524 55%, #091220 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 26px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-strip::before {
+    content: '';
+    position: absolute;
+    left: -80px; top: -60px;
+    width: 380px; height: 200px;
+    background: radial-gradient(ellipse, rgba(232,114,12,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-strip::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -52deg, transparent, transparent 40px,
+      rgba(255,255,255,0.012) 40px, rgba(255,255,255,0.012) 41px
+    );
+    pointer-events: none;
+  }
+
+  .hero-left { position: relative; z-index: 1; }
+
+  .hero-eyebrow {
+    font-size: 9.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+
+  .hero-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .hero-headline em { font-style: normal; color: var(--orange); }
+
+  .hero-sub {
+    font-size: 10.5px;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  /* Stats */
+  .hero-stats {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stat { text-align: center; }
+
+  .stat .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .stat .num span { color: var(--orange); }
+
+  .stat .lbl {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .stat-div {
+    width: 1px; height: 36px;
+    background: var(--border-lit);
+  }
+
+  /* ═══════════════════════════════
+     MAIN LAYOUT
+  ═══════════════════════════════ */
+  .main-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px 64px;
+    gap: 52px;
+  }
+
+  /* Brand column */
+  .brand-col {
+    max-width: 360px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    animation: fadeLeft 0.65s ease both;
+  }
+
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(-18px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .brand-col h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 27px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.25;
+  }
+
+  .brand-col h2 em { font-style: normal; color: var(--orange); }
+
+  .accent-bar {
+    width: 40px; height: 3px;
+    background: var(--orange);
+    border-radius: 2px;
+  }
+
+  .brand-col p {
+    font-size: 13.5px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .practice-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pt {
+    padding: 5px 12px;
+    border: 1px solid var(--border-lit);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.3px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .pt:hover { border-color: var(--orange-bdr); color: var(--orange); }
+
+  .commitment-strip {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .commitment-strip strong {
+    color: var(--white);
+    display: block;
+    font-size: 11px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ─── LOGIN CARD ─── */
+  .login-card {
+    width: 100%;
+    max-width: 430px;
+    background: var(--navy-mid);
+    border: 1px solid var(--border-lit);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    animation: fadeUp 0.65s ease 0.1s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-top {
+    background: linear-gradient(135deg, var(--navy-light) 0%, var(--navy-mid) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-top::after {
+    content: '';
+    position: absolute;
+    right: -30px; top: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,114,12,0.08) 0%, transparent 70%);
+  }
+
+  .card-top-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .card-icon {
+    width: 42px; height: 42px;
+    background: var(--orange-dim);
+    border: 1px solid var(--orange-bdr);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .card-top-text .title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 2px;
+  }
+
+  .card-top-text .sub {
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+
+  .notice {
+    background: rgba(245,166,35,0.08);
+    border: 1px solid rgba(245,166,35,0.25);
+    border-radius: 6px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .notice-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 4px;
+    animation: blink 1.5s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.25; }
+  }
+
+  .notice p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.55;
+  }
+
+  .notice p strong { color: var(--gold); }
+
+  /* Form */
+  .card-body { padding: 28px 28px 20px; }
+
+  .field { margin-bottom: 20px; }
+
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .field input {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--border-lit);
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13.5px;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  }
+
+  .field input:focus {
+    border-color: var(--orange);
+    background: rgba(232,114,12,0.05);
+    box-shadow: 0 0 0 3px rgba(232,114,12,0.1);
+  }
+
+  .field input::placeholder { color: rgba(255,255,255,0.2); }
+
+  .field-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .field-meta label { margin-bottom: 0; }
+
+  .field-meta a {
+    font-size: 11px;
+    color: var(--orange);
+    text-decoration: none;
+    opacity: 0.8;
+  }
+
+  .field-meta a:hover { opacity: 1; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--orange);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .submit-btn:hover {
+    background: #D4660A;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(232,114,12,0.3);
+  }
+
+  .submit-btn:active { transform: translateY(0); box-shadow: none; }
+
+  .card-footer {
+    padding: 14px 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-footer svg { opacity: 0.35; flex-shrink: 0; }
+
+  .card-footer span {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ═══════════════════════════════
+     SITE FOOTER
+  ═══════════════════════════════ */
+  .site-footer {
+    background: rgba(0,0,0,0.35);
+    border-top: 1px solid var(--border);
+    padding: 16px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .site-footer p {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .site-footer p strong { color: rgba(255,255,255,0.45); }
+
+  /* ═══════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════ */
+  @media (max-width: 900px) {
+    .brand-col { display: none; }
+    .hero-stats { display: none; }
+    .nav-links { display: none; }
+    .main-wrap { padding: 32px 20px; }
+    .topbar-links { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top utility bar -->
+<div class="topbar">
+  <div class="topbar-links">
+    <a href="#" class="active">Home</a>
+    <a href="#">About Us</a>
+    <a href="#">Practice Areas</a>
+    <a href="#">Contact Us</a>
+  </div>
+  <div class="topbar-right">
+    <div class="login-chip">Staff Login</div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a class="logo-wrap" href="#">
+
+    <!--
+    ════════════════════════════════════════════════
+     LOGO — TUNDE OGUNSAKIN & CO.
+     To insert logo: change src="" to src="toc-logo.png"
+     (place the logo file in the same folder as this file)
+    ════════════════════════════════════════════════
+    -->
+    <div class="logo-img-box">
+      <img
+        src="img/toco logo.jpg"
+        alt="Tunde Ogunsakin & Co."
+        class="logo-img"
+        id="tocLogo"
+        onload="this.style.display='block'; document.getElementById('tocLogoFallback').style.display='none';"
+        onerror="this.style.display='none';"
+      >
+      <div class="logo-placeholder-box" id="tocLogoFallback">
+        <span class="ph-icon">🏛️</span>
+        <span class="ph-label">Insert Logo</span>
+        <span class="ph-sub">src="toc-logo.png"</span>
+      </div>
+    </div>
+
+    <div class="firm-name-text">
+      <span class="line1">Tunde Ogunsakin &amp; Co.</span>
+      <span class="line2">Legal Practitioners &amp; Arbitrators</span>
+    </div>
+  </a>
+
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">About Us</a>
+    <a href="#">Practice Areas</a>
+    <a href="#">Our Attorneys</a>
+    <a href="#">News</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<!-- Hero strip -->
+<div class="hero-strip">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Staff Portal &nbsp;·&nbsp; Confidential Access</div>
+    <h1 class="hero-headline">Multidisciplinary <em>Legal</em><br>Excellence</h1>
+    <p class="hero-sub">Contemporary Law Firm · Global Standards</p>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="num">123<span>+</span></div>
+      <div class="lbl">Cases Won</div>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat">
+      <div class="num">7<span>+</span></div>
+      <div class="lbl">Years Active</div>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat">
+      <div class="num">1</div>
+      <div class="lbl">Global Office</div>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat">
+      <div class="num">24<span>%</span></div>
+      <div class="lbl">Client Growth</div>
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main-wrap">
+
+  <!-- Brand column -->
+  <div class="brand-col">
+    <div>
+      <div class="accent-bar"></div>
+      <h2 style="margin-top:16px;">Your Success Is Our<br><em>Commitment &amp; Priority</em></h2>
+    </div>
+    <p>The staff portal gives team members secure access to HR records, salary review documents, and annual performance summaries. Log in with your official credentials to continue.</p>
+    <div class="practice-tags">
+      <span class="pt">Salary Review 2025</span>
+      <span class="pt">HR Records</span>
+      <span class="pt">Leave Management</span>
+      <span class="pt">Benefits Statement</span>
+      <span class="pt">Performance Summary</span>
+    </div>
+    <div class="commitment-strip">
+      <strong>Secure · Confidential · Protected</strong>
+      All data is encrypted and processed exclusively on firm-controlled servers. Do not share your login credentials with anyone.
+    </div>
+  </div>
+
+  <!-- Login card -->
+  <div class="login-card">
+    <div class="card-top">
+      <div class="card-top-row">
+        <div class="card-icon">⚖️</div>
+        <div class="card-top-text">
+          <div class="title">Staff Portal — HR &amp; Payroll</div>
+          <div class="sub">Tunde Ogunsakin &amp; Co. · Internal Access</div>
+        </div>
+      </div>
+      <div class="notice">
+        <div class="notice-dot"></div>
+        <p>
+          <strong>2026 Salary Review — Action Required</strong>
+          Your review letter and increment notice are ready. Access closes <strong>Friday, 8 May 2026</strong>.
+        </p>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <form action="awareness.html" method="GET">
+        <div class="field">
+          <label>Work Email Address</label>
+          <input type="email" name="email" placeholder="firstname.lastname@tundeogunsakin.com" required autocomplete="email">
+        </div>
+
+        <div class="field">
+          <div class="field-meta">
+            <label>Password</label>
+            <a href="#">Forgot password?</a>
+          </div>
+          <input type="password" name="password" placeholder="Enter your staff portal password" required autocomplete="current-password">
+        </div>
+
+        <button class="submit-btn" type="submit">
+          Access My Salary Review
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <div class="card-footer">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span>SSL-secured portal · Tunde Ogunsakin &amp; Co. IT Division · Unauthorised access is a disciplinary offence.</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="site-footer">
+  <p><strong>© 2026 Tunde Ogunsakin &amp; Co.</strong> · Legal Practitioners &amp; Arbitrators · All Rights Reserved.</p>
+  <p>Staff Portal v3.1 &nbsp;·&nbsp; Strictly Confidential</p>
+</div>
+
+<script>
+  // Show placeholder if src is empty/unset on load
+  window.addEventListener('DOMContentLoaded', () => {
+    const img = document.getElementById('tocLogo');
+    if (!img.getAttribute('src') || img.getAttribute('src') === '') {
+      img.style.display = 'none';
+      document.getElementById('tocLogoFallback').style.display = 'flex';
+    }
+  });
+</script>
+</body>
+</html>

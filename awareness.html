@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Awareness Notice</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0F1C;
+    --surface: #111827;
+    --surface2: #1A2235;
+    --amber: #F59E0B;
+    --amber-dim: rgba(245,158,11,0.15);
+    --amber-border: rgba(245,158,11,0.35);
+    --blue: #3B82F6;
+    --blue-dim: rgba(59,130,246,0.1);
+    --blue-border: rgba(59,130,246,0.3);
+    --green: #10B981;
+    --green-dim: rgba(16,185,129,0.1);
+    --red: #EF4444;
+    --text: #E5E7EB;
+    --muted: #6B7280;
+    --border: rgba(255,255,255,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 60px;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 600px 400px at 20% 20%, rgba(245,158,11,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 500px 600px at 80% 80%, rgba(59,130,246,0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 680px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Top bar */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .org-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .sim-tag {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--amber-dim);
+    border: 1px solid var(--amber-border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--amber);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .sim-tag::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--amber);
+    animation: blink 1.4s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  /* Alert card */
+  .alert-card {
+    background: var(--surface);
+    border: 1px solid var(--amber-border);
+    border-radius: 16px;
+    padding: 36px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .alert-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--amber), transparent);
+  }
+
+  .alert-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--amber-dim);
+    border: 1.5px solid var(--amber-border);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+
+  .alert-card h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .alert-card .lead {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .alert-card .lead strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* Credential reveal (if they submitted) */
+  .cred-reveal {
+    background: var(--surface2);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-top: 24px;
+    display: none;
+  }
+
+  .cred-reveal.visible { display: block; }
+
+  .cred-reveal .cred-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--red);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .cred-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cred-row:last-child { border-bottom: none; }
+
+  .cred-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .cred-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #fff;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 5px;
+    padding: 4px 10px;
+  }
+
+  /* What happened */
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 18px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .section-card:nth-child(3) { animation-delay: 0.1s; }
+  .section-card:nth-child(4) { animation-delay: 0.2s; }
+  .section-card:nth-child(5) { animation-delay: 0.3s; }
+
+  .section-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Red flags */
+  .flag-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .flag-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--surface2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+  }
+
+  .flag-item:hover {
+    border-color: rgba(245,158,11,0.3);
+  }
+
+  .flag-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: var(--amber-dim);
+    border: 1px solid var(--amber-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--amber);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .flag-text {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .flag-text strong {
+    color: #fff;
+    display: block;
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+
+  /* Action guide */
+  .action-card {
+    background: var(--blue-dim);
+    border: 1px solid var(--blue-border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 18px;
+  }
+
+  .action-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .step-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    width: 28px;
+    text-align: center;
+    margin-top: 1px;
+  }
+
+  .step-text {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  .step-text strong {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  /* Score */
+  .score-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 32px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .score-left h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .score-left p {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 380px;
+  }
+
+  .score-badge {
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 2.5px solid var(--green);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--green-dim);
+  }
+
+  .score-badge .score-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1;
+  }
+
+  .score-badge .score-label {
+    font-size: 9px;
+    color: var(--green);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* Footer */
+  .page-footer {
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  .page-footer p {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.3px;
+  }
+
+  @media (max-width: 600px) {
+    .alert-card, .section-card, .action-card, .score-card { padding: 22px 20px; }
+    .score-card { flex-direction: column; }
+    .top-bar { flex-direction: column; gap: 12px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="org-badge">IT Security &amp; Compliance</div>
+    <div class="sim-tag">Phishing Simulation</div>
+  </div>
+
+  <!-- Main alert -->
+  <div class="alert-card">
+    <div class="alert-icon">🎣</div>
+    <h1>You just clicked a simulated phishing link.</h1>
+    <p class="lead">
+      No real harm has been done. This was an <strong>authorised internal security awareness exercise</strong>
+      designed and executed by your IT/management team. Your real credentials were never stored or transmitted to any external server.
+    </p>
+
+    <!-- Credential reveal (shown only if they submitted) -->
+    <div class="cred-reveal" id="credReveal">
+      <div class="cred-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Credentials you submitted — visible to simulation administrator only
+      </div>
+      <div class="cred-row">
+        <div class="cred-key">email</div>
+        <div class="cred-val" id="showEmail">—</div>
+      </div>
+      <div class="cred-row">
+        <div class="cred-key">password</div>
+        <div class="cred-val" id="showPass">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What happened -->
+  <div class="section-card">
+    <div class="section-title">What just happened</div>
+    <p style="font-size:13.5px; color:var(--muted); line-height:1.75; font-weight:300;">
+      You received a simulated phishing email designed to look like an official 
+      <strong style="color:var(--text)">HR Salary Review notification</strong>. 
+      The link pointed to a fake login portal mimicking your company's internal system. 
+      Had this been a real attack, your credentials could have been stolen and used to compromise 
+      your account — and potentially the entire organisation's systems.
+    </p>
+  </div>
+
+  <!-- Red flags -->
+  <div class="section-card">
+    <div class="section-title">Red flags in that email</div>
+    <div class="flag-list">
+      <div class="flag-item">
+        <div class="flag-num">01</div>
+        <div class="flag-text">
+          <strong>Suspicious sender domain</strong>
+          The "From" address was subtly different from your real company domain — a classic spoofing technique.
+        </div>
+      </div>
+      <div class="flag-item">
+        <div class="flag-num">02</div>
+        <div class="flag-text">
+          <strong>Manufactured urgency</strong>
+          Phrases like "expires in 48 hours" or "access before Friday" are pressure tactics to stop you thinking clearly.
+        </div>
+      </div>
+      <div class="flag-item">
+        <div class="flag-num">03</div>
+        <div class="flag-text">
+          <strong>Credential request via link</strong>
+          Legitimate HR portals do not ask you to re-enter your password through a link in an email.
+        </div>
+      </div>
+      <div class="flag-item">
+        <div class="flag-num">04</div>
+        <div class="flag-text">
+          <strong>No prior official announcement</strong>
+          Real company-wide exercises or portals are typically announced through official internal channels first.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What to do -->
+  <div class="action-card">
+    <div class="section-title" style="color:rgba(147,197,253,0.7);">What to do next time</div>
+    <div class="action-steps">
+      <div class="step">
+        <div class="step-icon">🔍</div>
+        <div class="step-text"><strong>Inspect the sender address carefully.</strong> Hover over — or tap — the "From" name to see the full email address before engaging.</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">🚫</div>
+        <div class="step-text"><strong>Never enter your credentials via an emailed link.</strong> Navigate directly to internal portals by typing the URL yourself.</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">📣</div>
+        <div class="step-text"><strong>Report suspicious emails immediately.</strong> Forward to your IT team or use the "Report Phishing" button in your mail client.</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">🔑</div>
+        <div class="step-text"><strong>If in doubt, change your password.</strong> Even in a simulation, treat it as real and reset credentials as a precaution.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Closing note -->
+  <div class="score-card">
+    <div class="score-left">
+      <h3>You're now better prepared.</h3>
+      <p>Phishing is responsible for over 80% of reported security incidents globally. Awareness is your strongest defence. Thank you for participating — use this as a learning moment, not a setback.</p>
+    </div>
+    <div class="score-badge">
+      <div class="score-num">+1</div>
+      <div class="score-label">Aware</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <p>Internal Security Awareness Programme &nbsp;·&nbsp; Authorised Exercise &nbsp;·&nbsp; Strictly Confidential</p>
+    <p style="margin-top:4px;">No credentials were stored on external servers &nbsp;·&nbsp; © 2025</p>
+  </div>
+
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const email = params.get('email');
+  const password = params.get('password');
+
+  if (email || password) {
+    document.getElementById('credReveal').classList.add('visible');
+    document.getElementById('showEmail').textContent = email || '(not provided)';
+    document.getElementById('showPass').textContent = password || '(not provided)';
+  }
+</script>
+</body>
+</html>

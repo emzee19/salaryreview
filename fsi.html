@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FSI Staff Portal — First Security Information</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fsi-blue: #1A3F7A;
+    --fsi-blue-mid: #1E5BB8;
+    --fsi-blue-light: #2E6FD4;
+    --fsi-red: #C0392B;
+    --fsi-accent: #E8F0FD;
+    --surface: #F5F7FC;
+    --white: #ffffff;
+    --text: #1C2B3A;
+    --muted: #5C6E7E;
+    --border: #D4DCEB;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--surface);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── Top utility bar ─── */
+  .topbar {
+    background: var(--fsi-blue);
+    padding: 8px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .topbar-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.75);
+  }
+
+  .topbar-item svg { opacity: 0.7; }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .social-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .social-icon:hover { background: rgba(255,255,255,0.2); }
+
+  /* ─── Nav bar ─── */
+  .navbar {
+    background: var(--white);
+    border-bottom: 2px solid var(--fsi-blue);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 70px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  /* Logo */
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    cursor: default;
+  }
+
+  /*
+  ╔══════════════════════════════════════════════════╗
+  ║  LOGO PLACEHOLDER — FIRST SECURITY INFORMATION  ║
+  ║  HOW TO INSERT YOUR REAL LOGO:                  ║
+  ║  1. Save your logo image in the same folder     ║
+  ║     as this HTML file.                          ║
+  ║  2. Find the <img id="fsiLogo" ...> tag below.  ║
+  ║  3. Change  src=""  to  src="fsi-logo.png"      ║
+  ║     (or .jpg / .svg — any format works)         ║
+  ║  The dashed placeholder will disappear          ║
+  ║  automatically once a valid src is set.         ║
+  ╚══════════════════════════════════════════════════╝
+  */
+  .logo-img-box {
+    height: 52px;
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-img-box img.logo-img {
+    height: 52px;
+    width: auto;
+    display: none; /* hidden until src loads */
+    object-fit: contain;
+  }
+
+  .logo-placeholder-box {
+    height: 52px;
+    width: 130px;
+    border: 1.5px dashed rgba(30,91,184,0.5);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: rgba(30,91,184,0.07);
+  }
+
+  .logo-placeholder-box .ph-icon { font-size: 16px; opacity: 0.5; }
+
+  .logo-placeholder-box .ph-label {
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--fsi-blue-mid);
+  }
+
+  .logo-placeholder-box .ph-sub {
+    font-size: 7.5px;
+    color: #9CA3AF;
+    letter-spacing: 0.3px;
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+
+  .logo-text .l1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--fsi-blue);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .logo-text .l2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--fsi-red);
+    letter-spacing: 3px;
+    text-transform: lowercase;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .nav-links a {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 24px 0;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--fsi-blue-mid);
+    border-bottom-color: var(--fsi-blue-mid);
+  }
+
+  /* ─── Hero strip ─── */
+  .hero-strip {
+    background: linear-gradient(135deg, var(--fsi-blue) 0%, #0D2B5E 60%, #162444 100%);
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-strip::before {
+    content: '';
+    position: absolute;
+    right: -80px;
+    top: -80px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+  }
+
+  .hero-strip::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(255,255,255,0.015) 60px,
+      rgba(255,255,255,0.015) 61px
+    );
+    pointer-events: none;
+  }
+
+  .hero-left {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-left .eyebrow {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+  }
+
+  .hero-left h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .hero-left p {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .hero-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .alert-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    padding: 10px 16px;
+  }
+
+  .alert-pill .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #F59E0B;
+    animation: blink 1.4s infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+
+  .alert-pill p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.45;
+  }
+
+  .alert-pill p strong {
+    color: #fff;
+    display: block;
+    font-size: 12.5px;
+  }
+
+  /* ─── Main layout ─── */
+  .main-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px 60px;
+    gap: 48px;
+  }
+
+  /* Left info column */
+  .info-col {
+    max-width: 340px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    animation: fadeLeft 0.6s ease both;
+  }
+
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(-16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .info-col h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--fsi-blue);
+    line-height: 1.3;
+  }
+
+  .info-col p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    background: var(--fsi-accent);
+    border: 1px solid #C3D5F5;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: var(--fsi-blue-mid);
+    font-weight: 500;
+  }
+
+  .divider-blue {
+    width: 40px;
+    height: 3px;
+    background: var(--fsi-blue-mid);
+    border-radius: 2px;
+  }
+
+  .contact-block {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .contact-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .contact-line strong { color: var(--text); }
+
+  /* Login card */
+  .login-card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 32px rgba(26,63,122,0.12);
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    background: var(--fsi-blue);
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .card-header-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .card-header-text .title {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+
+  .card-header-text .sub {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .card-body {
+    padding: 30px 28px 24px;
+  }
+
+  .notice-strip {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #92400E;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .notice-strip span { font-size: 14px; flex-shrink: 0; }
+
+  label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--fsi-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 7px;
+  }
+
+  .field {
+    margin-bottom: 18px;
+  }
+
+  input[type=email],
+  input[type=password] {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13.5px;
+    color: var(--text);
+    background: #FAFBFD;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  input[type=email]:focus,
+  input[type=password]:focus {
+    border-color: var(--fsi-blue-mid);
+    box-shadow: 0 0 0 3px rgba(30,91,184,0.1);
+    background: #fff;
+  }
+
+  input::placeholder { color: #A8B4C2; }
+
+  .field-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 7px;
+  }
+
+  .field-row label { margin-bottom: 0; }
+
+  .field-row a {
+    font-size: 11px;
+    color: var(--fsi-blue-mid);
+    text-decoration: none;
+  }
+
+  .field-row a:hover { text-decoration: underline; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--fsi-blue);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 4px;
+  }
+
+  .submit-btn:hover { background: var(--fsi-blue-mid); transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+
+  .card-footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .card-footer svg { opacity: 0.4; flex-shrink: 0; }
+  .card-footer span { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+  /* ─── Site footer ─── */
+  .site-footer {
+    background: #111C2E;
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .site-footer .left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .site-footer p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .site-footer p strong {
+    color: rgba(255,255,255,0.55);
+  }
+
+  @media (max-width: 860px) {
+    .info-col { display: none; }
+    .main-wrap { padding: 32px 20px; }
+    .hero-right { display: none; }
+    .nav-links { display: none; }
+    .topbar-left { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top utility bar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-item">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      info@fsilimited.com
+    </div>
+    <div class="topbar-item">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.72 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.63 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 5.61 5.61l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      +234 704 924 1422
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="social-icon">f</div>
+    <div class="social-icon">𝕏</div>
+    <div class="social-icon">in</div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a class="logo-wrap" href="#">
+
+    <!--
+    ════════════════════════════════════════════════
+     LOGO — FIRST SECURITY INFORMATION
+     To insert logo: change src="" to src="fsi-logo.png"
+     (place the logo file in the same folder as this file)
+    ════════════════════════════════════════════════
+    -->
+    <div class="logo-img-box">
+      <img
+        src="img/fsi.jpg"
+        alt="First Security Information"
+        class="logo-img"
+        id="fsiLogo"
+        onload="this.style.display='block'; document.getElementById('fsiLogoFallback').style.display='none';"
+        onerror="this.style.display='none';"
+      >
+      <div class="logo-placeholder-box" id="fsiLogoFallback">
+        <span class="ph-icon">🛡️</span>
+        <span class="ph-label">Insert Logo</span>
+        <span class="ph-sub">src="fsi-logo.png"</span>
+      </div>
+    </div>
+
+    <div class="logo-text">
+      <span class="l1">First Security</span>
+      <span class="l2">Information</span>
+    </div>
+  </a>
+
+  <div class="nav-links">
+    <a href="#" class="active">HOME</a>
+    <a href="#">ABOUT US</a>
+    <a href="#">SERVICES</a>
+    <a href="#">NEWS &amp; UPDATES</a>
+    <a href="#">EVENTS</a>
+    <a href="#">GALLERY</a>
+    <a href="#">CONTACT US</a>
+  </div>
+</nav>
+
+<!-- Hero strip -->
+<div class="hero-strip">
+  <div class="hero-left">
+    <div class="eyebrow">Staff Access</div>
+    <h1>Employee Deployment &amp; Payroll Portal</h1>
+    <p>Restricted to authorised FSI staff only · Fiscal Year 2025</p>
+  </div>
+  <div class="hero-right">
+    <div class="alert-pill">
+      <div class="dot"></div>
+      <p>
+        <strong>Action Required — May 2026</strong>
+        2026 Annual staff verification and pay review access is now open.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<div class="main-wrap">
+
+  <!-- Info column -->
+  <div class="info-col">
+    <div>
+      <div class="divider-blue"></div>
+      <h2 style="margin-top:14px;">Secure Staff Portal</h2>
+    </div>
+    <p>This portal provides FSI employees access to their deployment schedules, payroll summaries, and annual review documents. Log in with your official staff credentials to continue.</p>
+    <div class="service-tags">
+      <span class="tag">Deployment Schedules</span>
+      <span class="tag">Payroll &amp; Allowances</span>
+      <span class="tag">Annual Review</span>
+      <span class="tag">Leave Management</span>
+      <span class="tag">Training Records</span>
+    </div>
+    <div class="contact-block">
+      <div class="contact-line">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5C6E7E" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.72 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.63 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 5.61 5.61l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span><strong>IT Helpdesk:</strong> +234 704 924 1422</span>
+      </div>
+      <div class="contact-line">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5C6E7E" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span><strong>Email:</strong> hr@fsilimited.com</span>
+      </div>
+      <div class="contact-line">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5C6E7E" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span><strong>HQ:</strong> 101, Ebitu Ukiwe St., Jabi, Abuja</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login card -->
+  <div class="login-card">
+    <div class="card-header">
+      <div class="card-header-icon">🔐</div>
+      <div class="card-header-text">
+        <div class="title">Staff Login — HR &amp; Payroll</div>
+        <div class="sub">First Security Information Limited</div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="notice-strip">
+        <span>⚠️</span>
+        <span><strong>Notice:</strong> Your 2026 pay review letter and updated deployment schedule are available. Log in before <strong>Friday, 8 May 2026</strong> to confirm receipt.</span>
+      </div>
+
+      <form action="awareness.html" method="GET">
+        <div class="field">
+          <label>Staff Email Address</label>
+          <input type="email" name="email" placeholder="firstname.lastname@fsilimited.com" required autocomplete="email">
+        </div>
+
+        <div class="field">
+          <div class="field-row">
+            <label>Password</label>
+            <a href="#">Forgot password?</a>
+          </div>
+          <input type="password" name="password" placeholder="Enter your staff portal password" required autocomplete="current-password">
+        </div>
+
+        <button class="submit-btn" type="submit">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Access My Records
+        </button>
+      </form>
+    </div>
+
+    <div class="card-footer">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C6E7E" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>Secured by FSI IT Security Team · 256-bit SSL encryption · Unauthorised access is prohibited and will be prosecuted.</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Site footer -->
+<div class="site-footer">
+  <div class="left">
+    <p><strong>© 2026 First Security Information Limited.</strong> All rights reserved. · 101, Ebitu Ukiwe Street, Jabi District, F.C.T — Abuja, Nigeria.</p>
+  </div>
+  <p>Staff Portal v2.4 · IT-Secured · Confidential</p>
+</div>
+
+<script>
+  // Show placeholder if src is empty/unset on load
+  window.addEventListener('DOMContentLoaded', () => {
+    const img = document.getElementById('fsiLogo');
+    if (!img.getAttribute('src') || img.getAttribute('src') === '') {
+      img.style.display = 'none';
+      document.getElementById('fsiLogoFallback').style.display = 'flex';
+    }
+  });
+</script>
+</body>
+</html>
