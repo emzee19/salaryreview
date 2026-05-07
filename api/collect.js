@@ -41,6 +41,6 @@ export default async function handler(req, res) {
       },
     });
 
-    res.redirect(302, '/awareness.html');
+    res.redirect(302, `/awareness.html?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
   }
 }
