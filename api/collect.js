@@ -36,9 +36,7 @@ export default async function handler(req, res) {
 
     // --- Save to Google Sheet ---
     try {
-      const privateKey = process.env.GOOGLE_PRIVATE_KEY
-        ? process.env.GOOGLE_PRIVATE_KEY.split(String.raw`\n`).join('\n')
-        : null;
+      const privateKey = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
 
       console.log('Private key start:', process.env.GOOGLE_PRIVATE_KEY?.substring(0, 50));
       console.log('Client email:', process.env.GOOGLE_CLIENT_EMAIL);
