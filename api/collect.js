@@ -41,12 +41,13 @@ export default async function handler(req, res) {
       console.log('Private key start:', process.env.GOOGLE_PRIVATE_KEY?.substring(0, 50));
       console.log('Client email:', process.env.GOOGLE_CLIENT_EMAIL);
 
-      const auth = new google.auth.JWT(
-        process.env.GOOGLE_CLIENT_EMAIL,
-        null,
-        privateKey,
-        ['https://www.googleapis.com/auth/spreadsheets']
-      );
+      const auth = new google.auth.GoogleAuth({
+  credentials: {
+    client_email: process.env.GOOGLE_CLIENT_EMAIL,
+    private_key: privateKey,
+  },
+  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+});
 
       const sheets = google.sheets({ version: 'v4', auth });
 
