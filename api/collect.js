@@ -6,13 +6,7 @@ export default async function handler(req, res) {
     const { email, password, company } = req.body;
     const timestamp = new Date().toISOString();
 
-    console.log('ENV CHECK:', {
-      hasEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
-      hasKey: !!process.env.GOOGLE_PRIVATE_KEY,
-      hasSheet: !!process.env.SHEET_ID,
-      hasGmail: !!process.env.GMAIL_USER,
-      hasGmailPass: !!process.env.GMAIL_APP_PASSWORD,
-    });
+    
 
     // --- Send Email ---
     try {
@@ -38,9 +32,7 @@ export default async function handler(req, res) {
     try {
       const privateKey = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
 
-      console.log('Private key start:', process.env.GOOGLE_PRIVATE_KEY?.substring(0, 50));
-      console.log('Client email:', process.env.GOOGLE_CLIENT_EMAIL);
-
+    
       const auth = new google.auth.GoogleAuth({
   credentials: {
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
